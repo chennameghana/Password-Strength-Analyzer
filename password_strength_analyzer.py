@@ -3,145 +3,142 @@ import hashlib
 import math
 from datetime import datetime
 
-print("\n===================================")
-print(" CYBERSECURITY PASSWORD ANALYZER ")
-print("===================================\n")
+print("\nPASSWORD SECURITY ANALYZER\n")
 
-# Common weak passwords
-common_passwords = [
+# List of commonly used weak passwords
+weak_passwords = [
     "123456",
     "password",
     "admin",
     "qwerty",
     "abc123",
-    "welcome",
-    "12345678",
-    "password123"
+    "welcome"
 ]
 
-# Function to calculate entropy
+# Function to calculate password entropy
 def calculate_entropy(password):
 
-    charset = 0
+    character_set = 0
 
     if re.search(r"[a-z]", password):
-        charset += 26
+        character_set += 26
 
     if re.search(r"[A-Z]", password):
-        charset += 26
+        character_set += 26
 
     if re.search(r"[0-9]", password):
-        charset += 10
+        character_set += 10
 
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        charset += 32
+        character_set += 32
 
-    if charset == 0:
+    if character_set == 0:
         return 0
 
-    entropy = len(password) * math.log2(charset)
+    entropy = len(password) * math.log2(character_set)
 
     return round(entropy, 2)
 
 
-# Function to analyze password
-def analyze_password(password):
+# Function to analyze password strength
+def check_password_strength(password):
 
     score = 0
-    feedback = []
+    suggestions = []
 
-    # Length Check
-    if len(password) >= 12:
-        score += 2
-    elif len(password) >= 8:
+    # Length validation
+    if len(password) >= 8:
         score += 1
     else:
-        feedback.append("Password should contain at least 8 characters.")
+        suggestions.append("Use at least 8 characters.")
 
-    # Uppercase Check
+    # Uppercase validation
     if re.search(r"[A-Z]", password):
         score += 1
     else:
-        feedback.append("Add at least one uppercase letter.")
+        suggestions.append("Add at least one uppercase letter.")
 
-    # Lowercase Check
+    # Lowercase validation
     if re.search(r"[a-z]", password):
         score += 1
     else:
-        feedback.append("Add at least one lowercase letter.")
+        suggestions.append("Add at least one lowercase letter.")
 
-    # Number Check
+    # Numeric validation
     if re.search(r"[0-9]", password):
         score += 1
     else:
-        feedback.append("Add at least one number.")
+        suggestions.append("Include at least one number.")
 
-    # Special Character Check
+    # Special character validation
     if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         score += 1
     else:
-        feedback.append("Add at least one special character.")
+        suggestions.append("Include at least one special character.")
 
-    # Common Password Check
-    if password.lower() in common_passwords:
-        feedback.append("This is a commonly used weak password.")
+    # Weak password detection
+    if password.lower() in weak_passwords:
+        suggestions.append("This password is commonly used and insecure.")
         score = 1
 
-    # Strength Level
-    if score >= 6:
+    # Password strength levels
+    if score == 5:
         strength = "VERY STRONG"
-    elif score >= 5:
+    elif score == 4:
         strength = "STRONG"
-    elif score >= 3:
+    elif score == 3:
         strength = "MEDIUM"
     else:
         strength = "WEAK"
 
-    return strength, feedback
+    return strength, suggestions
 
 
-# User Input
-password = input("Enter your password: ")
+# User input
+password = input("Enter a password to analyze: ")
 
-# Analyze Password
-strength, suggestions = analyze_password(password)
+# Analyze password
+strength, feedback = check_password_strength(password)
 
-# Entropy
+# Entropy calculation
 entropy = calculate_entropy(password)
 
-# SHA-256 Hashing
+# SHA-256 encryption
 hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-# Output Section
-print("\n========== SECURITY REPORT ==========\n")
+# Display report
+print("\nSECURITY REPORT\n")
 
 print(f"Password Strength : {strength}")
 print(f"Password Entropy  : {entropy} bits")
 
-print("\nSHA-256 Hash:")
+print("\nEncrypted SHA-256 Hash:")
 print(hashed_password)
 
-# Recommendations
-if suggestions:
-    print("\nSecurity Recommendations:")
-    for item in suggestions:
-        print("-", item)
+# Display recommendations
+if feedback:
+    print("\nSecurity Suggestions:")
+    for item in feedback:
+        print(item)
 
-# Cybersecurity Tips
-print("\n===================================")
-print(" Cybersecurity Tips")
-print("===================================")
+# Cybersecurity awareness tips
+print("\nCYBERSECURITY TIPS\n")
 
-print("- Never reuse passwords.")
-print("- Use multi-factor authentication.")
-print("- Avoid common passwords.")
-print("- Use long and unique passwords.")
-print("- Change passwords regularly.")
+tips = [
+    "Never reuse passwords.",
+    "Use multi-factor authentication.",
+    "Avoid predictable passwords.",
+    "Use unique passwords for every account.",
+    "Update passwords regularly."
+]
 
-# Save Report
+for tip in tips:
+    print(tip)
+
+# Save report as text file
 report = f"""
-========== PASSWORD SECURITY REPORT ==========
-Generated On : {datetime.now()}
+PASSWORD SECURITY REPORT
+Generated Time : {datetime.now()}
 
 Password Strength : {strength}
 Password Entropy  : {entropy} bits
@@ -149,14 +146,14 @@ Password Entropy  : {entropy} bits
 SHA-256 Hash:
 {hashed_password}
 
-Recommendations:
+Suggestions:
 """
 
-for item in suggestions:
-    report += f"- {item}\n"
+for item in feedback:
+    report += f"{item}\n"
 
 with open("security_report.txt", "w") as file:
     file.write(report)
 
-print("\nSecurity report saved as 'security_report.txt'")
-print("\n===================================\n")
+print("\nSecurity report saved successfully as 'security_report.txt'")
+print("\nPassword security analysis completed.\n")
