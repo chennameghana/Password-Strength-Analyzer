@@ -21,11 +21,4 @@ The main goal of this project is to understand basic password security concepts 
 - Hashlib
 - Math Module
 
-## How to Run
 
-1. Open the project folder in VS Code
-2. Open terminal
-3. Run the following command:
-
-```bash
-python password_strength_analyzer.py
